@@ -109,7 +109,7 @@ fileButton.place(relx=0.56, rely= 0.842, relheight= 0.052, relwidth = 0.28)
 
 
 def make_pdf():
-    jpgtopdf.create_pdf(loaded_img, NAME.get(), flipped, 'C:\\Users\\Kuba\\Desktop')
+    jpgtopdf.create_pdf(loaded_img, NAME.get(), flipped)
 
 
 pdfButton = tk.Button(root, text="Make PDF", command=make_pdf)

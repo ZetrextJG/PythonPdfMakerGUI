@@ -2,9 +2,10 @@ import os
 from PIL import Image
 import datetime
 
-def create_pdf(pathlist, name, isDate, outputpath):
+def create_pdf(pathlist, name, isDate):
     n = len(pathlist)
     imglist = []
+    outputpath = os.getcwd()
 
     if n == 1:
         img  = Image.open(pathlist[0])
