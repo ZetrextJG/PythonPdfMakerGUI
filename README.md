@@ -10,6 +10,7 @@ $ git clone https://github.com/ZetrextJG/PythonPdfMakerGUI.git
 
 #install the requirements
 $ python3 -m pip inbstall -r requirements.txt
+```
 
 ## Usage
 
@@ -17,3 +18,6 @@ $ python3 -m pip inbstall -r requirements.txt
 $ python3 app.py
 
 #Wait for the GUI to pop up
+
+#Enjoy
+```
