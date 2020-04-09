@@ -56,5 +56,5 @@ def preview(new_path1):
     img.image = render
     img.place(x=0, y=0)
 
-    new_root.title("Tkinter window")
+    new_root.title("Image Preview")
     new_root.mainloop()
