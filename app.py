@@ -18,14 +18,16 @@ canvas.pack()
 
 #Display
 frame= tk.Frame(root, bg='#48454a')
-frame.place(relwidth=0.87, relheight= 0.75, relx=0.05, rely=0.05)
+frame.place(relwidth=0.88, relheight= 0.75, relx=0.06, rely=0.045)
 
 #Variables
 flipped = True
 date_color1 = "#22a112"
 date_color2 = "#c91818"
+folder_path = os.getcwd()
 NAME = tk.StringVar()
 NAME.set("Name")
+
 block_elements_list = []
 
 
@@ -49,7 +51,6 @@ class BlockElement():
         self.previewe_button.place(relx = 0.52, rely=0.22)
 
 
-        
 #Functions
 def update_board():
     for widget in frame.winfo_children():
@@ -59,31 +60,24 @@ def update_board():
         block_elements_list[j].create(0.08*j + 0.04)
 
 
-def print_conent(event):
-    print(f'NAME === > {NAME.get()}')
-
-
-
-
 #Entry
 nameEntry  = tk.Entry(root, bg="#b5b5c4", border=False, fg="#010412")
-nameEntry.place(relwidth=0.2, relheight = 0.04, relx=0.14, rely= 0.85)
-
+nameEntry.place(relwidth=0.2, relheight = 0.04, relx=0.14, rely= 0.82)
 nameEntry["textvariable"] = NAME
-nameEntry.bind('<Key-Return>', print_conent)
 
 
 #Text
 text = tk.Label(root, text="PDF Name:", font=("Calibri", 11), bg="#5b5d66")
-text.place(relx=0.014, rely= 0.854)
+text.place(relx=0.014, rely= 0.824)
+
+text_output_dir = tk.Label(root, text=os.getcwd(), font=("Calibri", 13), bg="#5b5d66")
+text_output_dir.place(relx=0.21, rely=0.949)
+
+text2 = tk.Label(root, text="Include DATE", font=("Calibri", 11), bg=date_color1, bd=2)
+text2.place(relwidth=0.2, relheight = 0.04, relx=0.14, rely= 0.88)
 
 
 #Buttons
-
-
-text2 = tk.Label(root, text="Include DATE", font=("Calibri", 11), bg=date_color1, bd=2)
-text2.place(relwidth=0.2, relheight = 0.04, relx=0.14, rely= 0.92)
-
 def change_color():
     global flipped
     if(flipped):
@@ -93,9 +87,18 @@ def change_color():
         text2.configure(text="Include DATE", bg=date_color1)
         flipped= True
 
-
 switchButton = tk.Button(root, text="On/off Date", bg="#9fa83d", command=change_color)
-switchButton.place(relx=0.014, rely= 0.924)
+switchButton.place(relx=0.014, rely= 0.884)
+
+
+def change_output_dir():
+    global folder_path
+    folder_path = filedialog.askdirectory(initialdir=os.getcwd(), title="Choose output directory")
+    text_output_dir.configure(text=folder_path)
+
+outputdirButton = tk.Button(root, text="Choose output dir",command=change_output_dir)
+outputdirButton.place(relx=0.014, rely=0.95)
+
 
 def loadimg():
     for widget in frame.winfo_children():
@@ -109,27 +112,31 @@ def loadimg():
             print(temp_name)
         one_element = BlockElement(temp_name, one_path)
         block_elements_list.append(one_element)
-
-    print(block_elements_list)
     
     for j in range(0, len(block_elements_list)):
         block_elements_list[j].create(0.08*j + 0.04)
 
-
 fileButton = tk.Button(root, text="Load Files", command=loadimg)
-fileButton.place(relx=0.56, rely= 0.842, relheight= 0.052, relwidth = 0.28)
+fileButton.place(relx=0.56, rely= 0.812, relheight= 0.052, relwidth = 0.28)
 
 
 def make_pdf():
+    global block_elements_list
+
     if len(block_elements_list) == 0:
         pass
     else:
         loaded_img = [x.path for x in block_elements_list]
-        custom_functions.create_pdf(loaded_img, NAME.get(), flipped)
+        custom_functions.create_pdf(loaded_img, NAME.get(), flipped, outputpath=folder_path)
 
+        for widget in frame.winfo_children():
+            widget.destroy()
+        
+        block_elements_list = []
+        NAME.set("Name")
 
 pdfButton = tk.Button(root, text="Make PDF", command=make_pdf)
-pdfButton.place(relx=0.56, rely= 0.918, relheight= 0.052, relwidth = 0.28)
+pdfButton.place(relx=0.56, rely= 0.888, relheight= 0.052, relwidth = 0.28)
 
 
 #RUN app

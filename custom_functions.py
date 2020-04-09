@@ -4,10 +4,9 @@ from PIL import Image, ImageTk
 import datetime
 import math
 
-def create_pdf(pathlist, name, isDate):
+def create_pdf(pathlist, name, isDate, outputpath):
     n = len(pathlist)
     imglist = []
-    outputpath = os.getcwd()
 
     if n == 1:
         img  = Image.open(pathlist[0])
