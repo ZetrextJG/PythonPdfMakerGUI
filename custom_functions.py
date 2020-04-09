@@ -37,7 +37,6 @@ def resize(width, height, img_loaded):
     else:
         new_width = round(width / b)
         new_height = round(height /b)
-    
 
     return img_loaded.resize((new_width, new_height), Image.ANTIALIAS)
 

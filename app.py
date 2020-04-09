@@ -32,7 +32,6 @@ block_elements_list = []
 #Classes
 class BlockElement():
     
-
     def __init__(self, name, path):
         self.path = path
         self.name = name
