@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, Text
 import os
 
-import jpgtopdf
+import custom_functions
 
 
 #Creating window
@@ -31,18 +31,35 @@ block_elements_list = []
 
 #Classes
 class BlockElement():
+    
+
     def __init__(self, name, path):
         self.path = path
         self.name = name
         self.xcord = 0.05
         self.BlockFrame = tk.Frame(frame, bg="#b1b6bd")
         self.text = tk.Label(self.BlockFrame, text=self.name, font=("Calibri", 11), bg="#ebf1fa")
+        self.previewe_button = tk.Button(self.BlockFrame, text="Preview", command=self.initialize_preview)
+
+    def initialize_preview(self):
+        custom_functions.preview(self.path)
     
     def create(self, ycord):
         self.BlockFrame.place(relx = self.xcord, rely = ycord, relheight= 0.07, relwidth=0.9)
         self.text.place(relx = self.xcord, rely= 0.22)
+        self.previewe_button.place(relx = 0.52, rely=0.22)
+
+
         
 #Functions
+def update_board():
+    for widget in frame.winfo_children():
+        widget.place_forget()
+
+    for j in range(0, len(block_elements_list)):
+        block_elements_list[j].create(0.08*j + 0.04)
+
+
 def print_conent(event):
     print(f'NAME === > {NAME.get()}')
 
@@ -87,7 +104,11 @@ def loadimg():
 
     filenames = filedialog.askopenfilenames(initialdir="/", title="Select Images", filetypes=(("JPEG files", "*.jpg"), ("PNG files", "*.png"), ("All files", "*.*")))
     for i, one_path in enumerate(filenames):
-        one_element = BlockElement(one_path.split("/")[-1], one_path)
+        temp_name = one_path.split("/")[-1]
+        if len(temp_name) > 24:
+            temp_name = temp_name[:20] + "..." + temp_name[-4:]
+            print(temp_name)
+        one_element = BlockElement(temp_name, one_path)
         block_elements_list.append(one_element)
 
     print(block_elements_list)
@@ -105,7 +126,7 @@ def make_pdf():
         pass
     else:
         loaded_img = [x.path for x in block_elements_list]
-        jpgtopdf.create_pdf(loaded_img, NAME.get(), flipped)
+        custom_functions.create_pdf(loaded_img, NAME.get(), flipped)
 
 
 pdfButton = tk.Button(root, text="Make PDF", command=make_pdf)
