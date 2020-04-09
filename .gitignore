@@ -1,0 +1,8 @@
+#Ignore img, pdf files
+*.jpg
+*.png
+*.pdf
+
+#ignore VS Studio Temp files
+.vscode/
+__pycache__/

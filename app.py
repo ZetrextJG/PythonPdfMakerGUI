@@ -26,9 +26,7 @@ date_color1 = "#22a112"
 date_color2 = "#c91818"
 NAME = tk.StringVar()
 NAME.set("Name")
-loaded_img = []
-display_name = []
-elements_list = []
+block_elements_list = []
 
 
 #Classes
@@ -85,23 +83,17 @@ switchButton.place(relx=0.014, rely= 0.924)
 
 def loadimg():
     for widget in frame.winfo_children():
-        widget.destroy()
+        widget.place_forget()
 
     filenames = filedialog.askopenfilenames(initialdir="/", title="Select Images", filetypes=(("JPEG files", "*.jpg"), ("PNG files", "*.png"), ("All files", "*.*")))
-    loaded_img.extend(filenames)
-    display_name = []
+    for i, one_path in enumerate(filenames):
+        one_element = BlockElement(one_path.split("/")[-1], one_path)
+        block_elements_list.append(one_element)
 
-    for x in loaded_img:
-        display_name.append(x.split("/")[-1])
-
-    print(display_name)
-
-    elements_list = []
-    for i, namejd in enumerate(display_name):
-        beee = BlockElement(namejd, loaded_img[i])
-        beee.create(0.08*i + 0.04)
-        elements_list.append(beee)
-
+    print(block_elements_list)
+    
+    for j in range(0, len(block_elements_list)):
+        block_elements_list[j].create(0.08*j + 0.04)
 
 
 fileButton = tk.Button(root, text="Load Files", command=loadimg)
@@ -109,7 +101,11 @@ fileButton.place(relx=0.56, rely= 0.842, relheight= 0.052, relwidth = 0.28)
 
 
 def make_pdf():
-    jpgtopdf.create_pdf(loaded_img, NAME.get(), flipped)
+    if len(block_elements_list) == 0:
+        pass
+    else:
+        loaded_img = [x.path for x in block_elements_list]
+        jpgtopdf.create_pdf(loaded_img, NAME.get(), flipped)
 
 
 pdfButton = tk.Button(root, text="Make PDF", command=make_pdf)
