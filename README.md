@@ -9,7 +9,7 @@ $ git clone https://github.com/ZetrextJG/PythonPdfMakerGUI.git
 # install python3 and python3-pip if thery are not installed
 
 #install the requirements
-$ python3 -m pip inbstall -r requirements.txt
+$ python3 -m pip install -r requirements.txt
 ```
 
 ## Usage
