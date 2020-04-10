@@ -20,6 +20,7 @@ canvas.pack()
 frame= tk.Frame(root, bg='#48454a')
 frame.place(relwidth=0.88, relheight= 0.75, relx=0.06, rely=0.045)
 
+
 #Variables
 flipped = True
 date_color1 = "#22a112"
@@ -31,33 +32,50 @@ NAME.set("Name")
 block_elements_list = []
 
 
+#Functions
+def update_board():
+    for j in range(0, len(block_elements_list)):
+        block_elements_list[j].number = j
+        block_elements_list[j].create(0.08*j + 0.04)
+
+
 #Classes
 class BlockElement():
     
-    def __init__(self, name, path):
+    def __init__(self, name, path, number):
+        self.number = number
         self.path = path
         self.name = name
         self.xcord = 0.05
         self.BlockFrame = tk.Frame(frame, bg="#b1b6bd")
         self.text = tk.Label(self.BlockFrame, text=self.name, font=("Calibri", 11), bg="#ebf1fa")
         self.previewe_button = tk.Button(self.BlockFrame, text="Preview", command=self.initialize_preview)
+        self.remove_button = tk.Button(self.BlockFrame, text="Remove", command=self.remove_element)
 
     def initialize_preview(self):
         custom_functions.preview(self.path)
+
+    def remove_element(self):
+        for widget in frame.winfo_children():
+            widget.place_forget()
+
+        
+        global block_elements_list
+        new_block_ele_list = []
+        for x in block_elements_list:
+            if not x.number == self.number:
+                new_block_ele_list.append(x)
+        block_elements_list = new_block_ele_list
+
+        update_board()
+        self.BlockFrame.destroy()
+
     
     def create(self, ycord):
-        self.BlockFrame.place(relx = self.xcord, rely = ycord, relheight= 0.07, relwidth=0.9)
+        self.BlockFrame.place(relx = self.xcord, rely = ycord, relheight= 0.07, relwidth= 0.9)
         self.text.place(relx = self.xcord, rely= 0.22)
-        self.previewe_button.place(relx = 0.52, rely=0.22)
-
-
-#Functions
-def update_board():
-    for widget in frame.winfo_children():
-        widget.place_forget()
-
-    for j in range(0, len(block_elements_list)):
-        block_elements_list[j].create(0.08*j + 0.04)
+        self.previewe_button.place(relx = 0.52, rely= 0.22)
+        self.remove_button.place(relx = 0.65, rely= 0.22)
 
 
 #Entry
@@ -109,8 +127,7 @@ def loadimg():
         temp_name = one_path.split("/")[-1]
         if len(temp_name) > 24:
             temp_name = temp_name[:20] + "..." + temp_name[-4:]
-            print(temp_name)
-        one_element = BlockElement(temp_name, one_path)
+        one_element = BlockElement(temp_name, one_path, i)
         block_elements_list.append(one_element)
     
     for j in range(0, len(block_elements_list)):
