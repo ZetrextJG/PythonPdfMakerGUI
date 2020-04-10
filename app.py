@@ -38,6 +38,10 @@ def update_board():
         block_elements_list[j].number = j
         block_elements_list[j].create(0.08*j + 0.04)
 
+def clear_board():
+    for widget in frame.winfo_children():
+            widget.place_forget()
+
 
 #Classes
 class BlockElement():
@@ -51,31 +55,49 @@ class BlockElement():
         self.text = tk.Label(self.BlockFrame, text=self.name, font=("Calibri", 11), bg="#ebf1fa")
         self.previewe_button = tk.Button(self.BlockFrame, text="Preview", command=self.initialize_preview)
         self.remove_button = tk.Button(self.BlockFrame, text="Remove", command=self.remove_element)
+        self.upButton = tk.Button(self.BlockFrame, text="Up", command=self.moveUp)
+        self.downButton = tk.Button(self.BlockFrame, text="Down", command=self.moveDown)
 
     def initialize_preview(self):
         custom_functions.preview(self.path)
 
     def remove_element(self):
-        for widget in frame.winfo_children():
-            widget.place_forget()
-
-        
+        clear_board()
         global block_elements_list
         new_block_ele_list = []
         for x in block_elements_list:
             if not x.number == self.number:
                 new_block_ele_list.append(x)
         block_elements_list = new_block_ele_list
-
         update_board()
         self.BlockFrame.destroy()
 
-    
+    def moveUp(self):
+        if self.number != 0:
+            clear_board()
+            global block_elements_list
+            temp = block_elements_list[self.number - 1]
+            block_elements_list[self.number - 1] = block_elements_list[self.number]
+            block_elements_list[self.number] = temp
+            update_board()
+
+    def moveDown(self):
+        global block_elements_list
+        if self.number != len(block_elements_list) - 1:
+            clear_board()
+            temp = block_elements_list[self.number + 1]
+            block_elements_list[self.number + 1] = block_elements_list[self.number]
+            block_elements_list[self.number] = temp
+            update_board()
+
+
     def create(self, ycord):
         self.BlockFrame.place(relx = self.xcord, rely = ycord, relheight= 0.07, relwidth= 0.9)
         self.text.place(relx = self.xcord, rely= 0.22)
         self.previewe_button.place(relx = 0.52, rely= 0.22)
         self.remove_button.place(relx = 0.65, rely= 0.22)
+        self.upButton.place(relx=0.785, rely=0.22)
+        self.downButton.place(relx=0.86, rely=0.22)
 
 
 #Entry
@@ -119,8 +141,7 @@ outputdirButton.place(relx=0.014, rely=0.95)
 
 
 def loadimg():
-    for widget in frame.winfo_children():
-        widget.place_forget()
+    clear_board()
 
     filenames = filedialog.askopenfilenames(initialdir="/", title="Select Images", filetypes=(("JPEG files", "*.jpg"), ("PNG files", "*.png"), ("All files", "*.*")))
     for i, one_path in enumerate(filenames):
@@ -130,8 +151,7 @@ def loadimg():
         one_element = BlockElement(temp_name, one_path, i)
         block_elements_list.append(one_element)
     
-    for j in range(0, len(block_elements_list)):
-        block_elements_list[j].create(0.08*j + 0.04)
+    update_board()
 
 fileButton = tk.Button(root, text="Load Files", command=loadimg)
 fileButton.place(relx=0.56, rely= 0.812, relheight= 0.052, relwidth = 0.28)
